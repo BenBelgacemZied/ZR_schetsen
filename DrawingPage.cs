@@ -16,10 +16,39 @@ public class DrawingPage : ContentPage
 
         var clear = new Button { Text = "🧽 Wissen", CornerRadius = 18 };
         var done = new Button { Text = "⭐ Klaar!", CornerRadius = 18 };
-        clear.Clicked += (_, _) => drawing.Clear();
-        done.Clicked += async (_, _) => await DisplayAlert("Goed gedaan! 🎉", "Je krijgt 10 XP voor het oefenen! ⭐", "Verder");
+        var back = new Button { Text = "⬅️ Terug", CornerRadius = 18 };
 
-        Content = new VerticalStackLayout { Padding = 18, Spacing = 14, Children = { heading, hint, drawing, new HorizontalStackLayout { Spacing = 12, HorizontalOptions = LayoutOptions.Center, Children = { clear, done } } } };
+        clear.Clicked += (_, _) => drawing.Clear();
+        back.Clicked += async (_, _) => await Navigation.PopAsync();
+        done.Clicked += async (_, _) =>
+        {
+            bool home = await DisplayAlert(
+                "Goed gedaan! 🎉",
+                "Je krijgt 10 XP voor het oefenen! ⭐\n\nWil je terug naar het startscherm?",
+                "🏠 Startscherm",
+                "✏️ Verder tekenen");
+
+            if (home)
+                await Navigation.PopToRootAsync();
+        };
+
+        Content = new VerticalStackLayout
+        {
+            Padding = 18,
+            Spacing = 14,
+            Children =
+            {
+                heading,
+                hint,
+                drawing,
+                new HorizontalStackLayout
+                {
+                    Spacing = 10,
+                    HorizontalOptions = LayoutOptions.Center,
+                    Children = { back, clear, done }
+                }
+            }
+        };
     }
 }
 
